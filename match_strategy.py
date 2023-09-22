@@ -90,7 +90,10 @@ def startMatch():
                     "\n", "").replace("\t", "").split('-')
                 break
 
-        results.append(tuple([int(scores[0]), int(scores[1]), (int(scores[0]) - int(scores[1])), DIR_OPP_TIME]))
+        # Lê estratégia utilizada na partida
+        strategy = getStrategy()
+
+        results.append(tuple([str(strategy), int(scores[0]), int(scores[1]), (int(scores[0]) - int(scores[1])), DIR_OPP_TIME]))
         # Verifica se deve Salvar CSV ao final de cada partida
         if(EACH_GAME == 1):
             # Executa função para criar csv dos resultados.
@@ -118,19 +121,17 @@ def saveScore(path_file, results):
         opening_type = 'a'
 
     # Abre arquivo CSV
-    csv_file = open(path_file, opening_type)
     # Abre o arquivo e adiciona o conteúdo.
-    with csv_file as f:
+    with open(path_file, opening_type) as f:
         csv_writer = csv.writer(f)
         # Verifica tipo de abertura
         if opening_type == 'w': 
             # Adiciona colunas no csv
-            csv_writer.writerow(['Our score', 'Opponent score', 'Goal balance', 'Opponent'])
+            csv_writer.writerow(['Estratégia', 'Our score', 'Opponent score', 'Goal balance', 'Opponent'])
 
         # Adiciona resultados
         csv_writer.writerows(results)
-        
-    csv_file.close()
+        f.close()
     
 
 def saveTime(path_file, time):
@@ -153,6 +154,24 @@ def saveTime(path_file, time):
 
         # Adiciona resultados
         csv_writer.writerow([time]) 
+
+        f.close()
+
+def getStrategy():
+
+    # Abre arquivo onde estratégia da partida foi salva.
+    strategyFile = open(f'{USER_PATH}/{DIR_OUR_TIME}/ar_files/strategy.txt', 'r')
+
+    # Estrategia selecionada
+    strategy = None
+
+    # Percorre arquivo e substitui valor de estrategia.
+    for stg in strategyFile.readlines():
+        strategy = stg
+        
+    strategyFile.close()
+
+    return strategy
 
 def main():
 
