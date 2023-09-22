@@ -91,13 +91,20 @@ def startMatch():
                 break
 
         results.append(tuple([int(scores[0]), int(scores[1]), (int(scores[0]) - int(scores[1])), DIR_OPP_TIME]))
+        # Verifica se deve Salvar CSV ao final de cada partida
+        if(EACH_GAME == 1):
+            # Executa função para criar csv dos resultados.
+            saveScore(f'{USER_PATH}/{DIR_LOG}/resultados_{date.today()}.csv', results)
+            results.clear()
+
         sleep(5)
 
     # Fim da execução da estratégia
     fim = time.time()
 
     # Executa funções para criar csv dos resultados e tempo.
-    saveScore(f'{USER_PATH}/{DIR_LOG}/resultados_{date.today()}.csv', results)
+    if(EACH_GAME != 1):
+        saveScore(f'{USER_PATH}/{DIR_LOG}/resultados_{date.today()}.csv', results)
     saveTime(f'{USER_PATH}/{DIR_LOG}/time.csv', fim-inicio)
 
 def saveScore(path_file, results):
@@ -109,9 +116,11 @@ def saveScore(path_file, results):
     # Caso o arquivo já exista define o tipo de abertura para alterar o conteúdo.
     if(os.path.isfile(path_file)):
         opening_type = 'a'
-    
+
+    # Abre arquivo CSV
+    csv_file = open(path_file, opening_type)
     # Abre o arquivo e adiciona o conteúdo.
-    with open(path_file, opening_type) as f:
+    with csv_file as f:
         csv_writer = csv.writer(f)
         # Verifica tipo de abertura
         if opening_type == 'w': 
@@ -120,6 +129,9 @@ def saveScore(path_file, results):
 
         # Adiciona resultados
         csv_writer.writerows(results)
+        
+    csv_file.close()
+    
 
 def saveTime(path_file, time):
     #opening_type = 'a' if os.path.isfile(path_file) else opening_type = 'w'
@@ -164,6 +176,9 @@ def main():
     # Indica se deve abrir o monitor ou não.
     global MONITOR
 
+    # Indica se deve salvar o CSV a cada partida. 1 = Salvar csv ao final da partida.
+    global EACH_GAME
+
     # Indica se deve repetir o script.
     repeat = 1
 
@@ -189,6 +204,9 @@ def main():
     # Qualquer outro valor indica que a pergunta será realizada.
     MONITOR = 0
 
+    # Caso deseje salvar ao final de cada partida, altere seu valor para 1
+    EACH_GAME = None
+
     # Verifica se deve ou não perguntar sobre o rcssmonitor.
     if(MONITOR != 1 and MONITOR != None):
         print("\nO Parâmetro a seguir indica se você deseja que o rcssmonitor NÃO seja aberto. " +
@@ -199,6 +217,16 @@ def main():
            MONITOR = 0
         else:
             MONITOR = int(MONITOR)
+
+    # Verifica se deve salvar ao final de cada partida
+    if(EACH_GAME == None):
+        print("\nDeseja salvar o resultado ao final de cada partida?\nPs.: Pode tornar a execução mais lenta.")
+        EACH_GAME = input("(1- Sim | Defalt: Não) ")
+
+        if(not EACH_GAME.isnumeric()):
+            EACH_GAME = 0
+        else:
+            EACH_GAME = int(EACH_GAME)
 
     DIR_LOG = None #"Documentos/Scripts/Logs"
     while True:
