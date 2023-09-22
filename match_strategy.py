@@ -90,7 +90,7 @@ def startMatch():
                     "\n", "").replace("\t", "").split('-')
                 break
 
-        results.append(tuple([int(scores[0]), int(scores[1]), (int(scores[0]) - int(scores[1]))]))
+        results.append(tuple([int(scores[0]), int(scores[1]), (int(scores[0]) - int(scores[1])), DIR_OPP_TIME]))
         sleep(5)
 
     # Fim da execução da estratégia
@@ -116,7 +116,7 @@ def saveScore(path_file, results):
         # Verifica tipo de abertura
         if opening_type == 'w': 
             # Adiciona colunas no csv
-            csv_writer.writerow(['Our score', 'Opponent score', 'Goal balance'])
+            csv_writer.writerow(['Our score', 'Opponent score', 'Goal balance', 'Opponent'])
 
         # Adiciona resultados
         csv_writer.writerows(results)
