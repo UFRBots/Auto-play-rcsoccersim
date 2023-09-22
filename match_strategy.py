@@ -117,10 +117,8 @@ def saveScore(path_file, results):
     if(os.path.isfile(path_file)):
         opening_type = 'a'
 
-    # Abre arquivo CSV
-    csv_file = open(path_file, opening_type)
     # Abre o arquivo e adiciona o conteúdo.
-    with csv_file as f:
+    with open(path_file, opening_type) as f:
         csv_writer = csv.writer(f)
         # Verifica tipo de abertura
         if opening_type == 'w': 
@@ -129,8 +127,7 @@ def saveScore(path_file, results):
 
         # Adiciona resultados
         csv_writer.writerows(results)
-        
-    csv_file.close()
+        f.close()
     
 
 def saveTime(path_file, time):
@@ -153,6 +150,7 @@ def saveTime(path_file, time):
 
         # Adiciona resultados
         csv_writer.writerow([time]) 
+        f.close()
 
 def main():
 
