@@ -96,7 +96,8 @@ def startMatch():
             # Executa função para criar csv dos resultados.
             saveScore(f'{USER_PATH}/{DIR_LOG}/resultados_{date.today()}.csv', results)
             results.clear()
-
+        
+        print(f'\n\nFim da partida {i+1}\n\n')
         sleep(5)
 
     # Fim da execução da estratégia
